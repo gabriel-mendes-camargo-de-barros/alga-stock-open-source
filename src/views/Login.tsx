@@ -4,12 +4,21 @@ import Container from '../shared/Container'
 import Form from '../shared/Form'
 import Input from '../shared/Input'
 import { Grid, Button } from '@material-ui/core'
+import { login, storeToken } from '../services/Authentication.service'
+import Swal from 'sweetalert2'
+import http from '../utils/http'
 
 const LoginView: React.FC = () => {
   const [credentials, setCredentials] = useState({ user: '', pass: '' })
 
-  const handleFormSubmit = () => {
-    console.log(credentials)
+  const handleFormSubmit = async () => {
+    try {
+      const user = await login(credentials)
+      storeToken(user.token)
+      http.defaults.headers.authorization = `Bearer ${user.token}`
+    } catch (err) {
+      Swal.fire('oops!', err.message, 'error')
+    }
   }
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {

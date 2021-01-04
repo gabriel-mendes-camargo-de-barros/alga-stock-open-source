@@ -4,6 +4,10 @@ const http = axios.create({
   baseURL: 'http://localhost:3024'
 })
 
-http.defaults.headers.authorization = 'batata'
+const token = window.localStorage.getItem('token')
+
+if (token) {
+  http.defaults.headers.authorization = `Bearer ${token}`
+}
 
 export default http
